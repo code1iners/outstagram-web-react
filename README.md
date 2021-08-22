@@ -8,3 +8,10 @@
 - React Helmet Async (App Title Dynamically).
 - Apollo Client (Access Graphql API).
 - Font Awesome (Fonts).
+
+# Requirement
+
+- [ ] Router.
+- [ ] Authentication.
+- [ ] App Architecture.
+- [ ] Styles.
