@@ -11,7 +11,7 @@
 
 # Requirement
 
-- [ ] Router.
+- [x] Router.
 - [ ] Authentication.
 - [ ] App Architecture.
 - [ ] Styles.
