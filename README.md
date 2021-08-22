@@ -14,4 +14,5 @@
 - [x] Router.
 - [x] Authentication.
 - [x] App Architecture.
-- [ ] Styles.
+- [x] Styles.
+- [ ] Sign In / Sign Up.
