@@ -13,7 +13,18 @@ export const darkTheme = {
 
 export const GlobalStyles = createGlobalStyle`
     ${reset}
+    input {
+      all: unset;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
-        background-color: ${(props) => props.theme.bgColor};
+        background-color: #fafafa;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+    }
+    a {
+      text-decoration: none;
     }
 `;
