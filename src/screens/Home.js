@@ -1,10 +1,10 @@
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, userSignOut } from "../apollo";
 
 const Home = () => {
   return (
     <div>
-      <h1>Home</h1>
-      <button onClick={() => isLoggedInVar(false)}>Logout Now!</button>
+      <h1>Welcome!</h1>
+      <button onClick={() => userSignOut()}>Logout Now!</button>
     </div>
   );
 };

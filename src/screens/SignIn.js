@@ -1,7 +1,9 @@
+import { gql, useMutation } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { userSignIn } from "../apollo";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
 import Button from "../components/auth/Button";
@@ -17,15 +19,64 @@ const HeaderContainer = styled.div`
   margin-bottom: 35px;
 `;
 
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      ok
+      error
+      token
+    }
+  }
+`;
+
 const SignIn = () => {
-  const { register, handleSubmit, formState } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState,
+    getValues,
+    setError,
+    clearErrors,
+  } = useForm({
     mode: "onChange",
   });
-  const onSubmitValid = (data) => {
-    // console.log("onSubmitValid", data);
+
+  const onCompleted = (data) => {
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (!ok) {
+      return setError("result", {
+        message: error,
+      });
+    }
+
+    if (token) {
+      userSignIn(token);
+    }
   };
 
-  console.log(formState.isValid);
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
+
+  const onSubmitValid = (data) => {
+    const { username, password } = getValues();
+    if (loading) {
+      return;
+    }
+    login({
+      variables: {
+        username,
+        password,
+      },
+    });
+  };
+
+  const clearSignInError = () => {
+    clearErrors("result");
+  };
+
   return (
     <AuthLayout>
       <PageTitle title="Sign in" />
@@ -45,6 +96,7 @@ const SignIn = () => {
             type="text"
             placeholder="Username"
             autoComplete="off"
+            onFocus={clearSignInError}
             hasError={Boolean(formState.errors?.username?.message)}
           />
           <FormError message={formState.errors?.username?.message} />
@@ -52,15 +104,21 @@ const SignIn = () => {
           <Input
             {...register("password", {
               required: "Password is required.",
-              minLength: 10,
+              minLength: 8,
             })}
             type="password"
             placeholder="Password"
+            onFocus={clearSignInError}
             hasError={Boolean(formState.errors?.password?.message)}
           />
           <FormError message={formState.errors?.password?.message} />
 
-          <Button type="submit" value="Sign in" disabled={!formState.isValid} />
+          <Button
+            type="submit"
+            value={loading ? "Loading..." : "Sign in"}
+            disabled={!formState.isValid || loading}
+          />
+          <FormError message={formState.errors?.result?.message} />
         </form>
 
         <Separator />
