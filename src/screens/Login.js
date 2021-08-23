@@ -1,8 +1,6 @@
-import {
-  faFacebookSquare,
-  faInstagram,
-} from "@fortawesome/free-brands-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
@@ -18,16 +16,45 @@ const HeaderContainer = styled.div`
 `;
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+
+  const onUsernameChange = (event) => {
+    setUsernameError("");
+    setUsername(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (username === "") {
+      setUsernameError("Not empty please.");
+    }
+    if (username.length < 10) {
+      setUsernameError("Too short");
+    }
+    console.log(username);
+  };
+
   return (
     <AuthLayout>
       <FormBox>
         <HeaderContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </HeaderContainer>
-        <form>
-          <Input type="text" placeholder="Username" />
+        <form onSubmit={handleSubmit}>
+          {usernameError}
+          <Input
+            onChange={onUsernameChange}
+            value={username}
+            type="text"
+            placeholder="Username"
+          />
           <Input type="password" placeholder="Password" />
-          <Button type="submit" placeholder="Log in" value="Log in" />
+          <Button
+            type="submit"
+            value="Log in"
+            disabled={username === "" && username.length < 10}
+          />
         </form>
 
         <Separator />
