@@ -1,8 +1,8 @@
-import { useReactiveVar } from "@apollo/client";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { isDarkModeVar, isLoggedInVar } from "./apollo";
+import { client, isDarkModeVar, isLoggedInVar } from "./apollo";
 import routes from "./routes";
 import Home from "./screens/Home";
 import Login from "./screens/SignIn";
@@ -15,26 +15,28 @@ function App() {
   const isDarkMode = useReactiveVar(isDarkModeVar);
 
   return (
-    <HelmetProvider>
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <GlobalStyles />
-        <Router>
-          <Switch>
-            <Route path={routes.home} exact>
-              {isLoggedIn ? <Home /> : <Login />}
-            </Route>
+    <ApolloProvider client={client}>
+      <HelmetProvider>
+        <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+          <GlobalStyles />
+          <Router>
+            <Switch>
+              <Route path={routes.home} exact>
+                {isLoggedIn ? <Home /> : <Login />}
+              </Route>
 
-            <Route path={routes.signUp}>
-              {!isLoggedIn ? <SignUp /> : null}
-            </Route>
+              <Route path={routes.signUp}>
+                {!isLoggedIn ? <SignUp /> : null}
+              </Route>
 
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
-        </Router>
-      </ThemeProvider>
-    </HelmetProvider>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          </Router>
+        </ThemeProvider>
+      </HelmetProvider>
+    </ApolloProvider>
   );
 }
 
