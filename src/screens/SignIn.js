@@ -1,6 +1,5 @@
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
@@ -9,52 +8,25 @@ import FacebookLogin from "../components/auth/FacebookLogin";
 import FormBox from "../components/auth/FormBox";
 import Input from "../components/auth/Input";
 import Separator from "../components/auth/Separator";
+import PageTitle from "../components/PageTitle";
 import routes from "../routes";
 
 const HeaderContainer = styled.div`
   margin-bottom: 35px;
 `;
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-
-  const onUsernameChange = (event) => {
-    setUsernameError("");
-    setUsername(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (username === "") {
-      setUsernameError("Not empty please.");
-    }
-    if (username.length < 10) {
-      setUsernameError("Too short");
-    }
-    console.log(username);
-  };
-
+const SignIn = () => {
   return (
     <AuthLayout>
+      <PageTitle title="Sign in" />
       <FormBox>
         <HeaderContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </HeaderContainer>
-        <form onSubmit={handleSubmit}>
-          {usernameError}
-          <Input
-            onChange={onUsernameChange}
-            value={username}
-            type="text"
-            placeholder="Username"
-          />
+        <form>
+          <Input type="text" placeholder="Username" />
           <Input type="password" placeholder="Password" />
-          <Button
-            type="submit"
-            value="Log in"
-            disabled={username === "" && username.length < 10}
-          />
+          <Button type="submit" value="Sign in" />
         </form>
 
         <Separator />
@@ -70,4 +42,4 @@ const Login = () => {
     </AuthLayout>
   );
 };
-export default Login;
+export default SignIn;
