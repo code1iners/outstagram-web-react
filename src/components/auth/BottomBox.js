@@ -20,4 +20,11 @@ const BottomBox = ({ cta, link, linkText }) => {
     </Container>
   );
 };
+
+// BottomBox.propTypes = {
+//   cta: PropTypes.string.isRequired,
+//   link: PropTypes.string.isRequired,
+//   linkText: PropTypes.string.isRequired,
+// };
+
 export default BottomBox;

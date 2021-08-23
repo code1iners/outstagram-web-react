@@ -7,26 +7,23 @@ import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
 import Button from "../components/auth/Button";
+import FacebookLogin from "../components/auth/FacebookLogin";
 import FormBox from "../components/auth/FormBox";
 import Input from "../components/auth/Input";
 import Separator from "../components/auth/Separator";
 import routes from "../routes";
 
-const FacebookLogin = styled.div`
-  color: #385285;
-  span {
-    margin-left: 10px;
-    font-weight: 600;
-  }
+const HeaderContainer = styled.div`
+  margin-bottom: 35px;
 `;
 
 const Login = () => {
   return (
     <AuthLayout>
       <FormBox>
-        <div>
+        <HeaderContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
-        </div>
+        </HeaderContainer>
         <form>
           <Input type="text" placeholder="Username" />
           <Input type="password" placeholder="Password" />
@@ -35,10 +32,7 @@ const Login = () => {
 
         <Separator />
 
-        <FacebookLogin>
-          <FontAwesomeIcon icon={faFacebookSquare} />
-          <span>Log in with Facebook</span>
-        </FacebookLogin>
+        <FacebookLogin />
       </FormBox>
 
       <BottomBox

@@ -10,7 +10,6 @@ const Container = styled(BaseBox)`
   margin-bottom: 15px;
   form {
     width: 100%;
-    margin-top: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
