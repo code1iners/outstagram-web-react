@@ -1,5 +1,8 @@
+import { gql, useMutation } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
@@ -25,7 +28,58 @@ const Subtitle = styled(FatLink)`
   margin-top: 10px;
 `;
 
+const SIGNUP_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $lastName: String!
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      lastName: $lastName
+      username: $username
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
 const SignUp = () => {
+  const history = useHistory();
+  const onCompleted = (data) => {
+    const {
+      createAccount: { ok, error },
+    } = data;
+
+    if (!ok) {
+      console.error(error);
+      return;
+    }
+
+    history.push(routes.home);
+  };
+  const [createAccount, { loading }] = useMutation(SIGNUP_MUTATION, {
+    onCompleted,
+  });
+  const { register, handleSubmit, errors, formState } = useForm({
+    mode: "onChange",
+  });
+  const onSubmitValid = (data) => {
+    if (loading) {
+      return;
+    }
+    createAccount({
+      variables: {
+        ...data,
+      },
+    });
+  };
+
   return (
     <AuthLayout>
       <PageTitle title="Sign up" />
@@ -41,12 +95,51 @@ const SignUp = () => {
 
         <Separator />
 
-        <form>
-          <Input type="text" placeholder="Email" />
-          <Input type="text" placeholder="Name" />
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="Password" />
-          <Button type="submit" placeholder="Sign up" value="Sign up" />
+        <form onSubmit={handleSubmit(onSubmitValid)}>
+          <Input
+            {...register("firstName", {
+              required: "First name is required.",
+            })}
+            type="text"
+            placeholder="First name"
+            autoComplete="off"
+          />
+          <Input
+            {...register("lastName")}
+            type="text"
+            placeholder="Last name"
+            autoComplete="off"
+          />
+          <Input
+            {...register("email", {
+              required: "Email is required.",
+            })}
+            type="email"
+            placeholder="Email"
+            autoComplete="off"
+          />
+          <Input
+            {...register("username", {
+              required: "Username is required",
+            })}
+            type="text"
+            placeholder="Username"
+            autoComplete="off"
+          />
+          <Input
+            {...register("password", {
+              required: "Password is required",
+            })}
+            name="password"
+            type="password"
+            placeholder="Password"
+            autoComplete="off"
+          />
+          <Button
+            type="submit"
+            value={loading ? "Loading..." : "Sign up"}
+            disabled={!formState.isValid || loading}
+          />
         </form>
       </FormBox>
 
