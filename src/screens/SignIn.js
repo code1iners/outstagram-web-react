@@ -2,6 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { userSignIn } from "../apollo";
 import AuthLayout from "../components/auth/AuthLayout";
@@ -16,7 +17,12 @@ import PageTitle from "../components/PageTitle";
 import routes from "../routes";
 
 const HeaderContainer = styled.div`
-  margin-bottom: 35px;
+  margin-bottom: 10px;
+`;
+
+const Notification = styled.div`
+  color: #2ecc71;
+  margin-bottom: 10px;
 `;
 
 const LOGIN_MUTATION = gql`
@@ -30,6 +36,8 @@ const LOGIN_MUTATION = gql`
 `;
 
 const SignIn = () => {
+  const location = useLocation();
+
   const {
     register,
     handleSubmit,
@@ -39,6 +47,10 @@ const SignIn = () => {
     clearErrors,
   } = useForm({
     mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+    },
   });
 
   const onCompleted = (data) => {
@@ -84,6 +96,7 @@ const SignIn = () => {
         <HeaderContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </HeaderContainer>
+        <Notification>{location?.state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("username", {

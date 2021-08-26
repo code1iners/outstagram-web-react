@@ -9,9 +9,11 @@ export const userSignIn = (token) => {
   localStorage.setItem(AUTHORIZATION, token);
   isLoggedInVar(true);
 };
-export const userSignOut = () => {
+export const userSignOut = (history) => {
   localStorage.removeItem(AUTHORIZATION);
   isLoggedInVar(false);
+
+  history?.replace();
 };
 
 export const isDarkModeVar = makeVar(false);
