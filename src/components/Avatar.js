@@ -3,20 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 
 const StyledAvatar = styled.div`
-  width: 19px;
-  height: 19px;
-  border-radius: 15px;
-`;
-
-const Img = styled.img`
-  width: 100%;
+  width: ${(props) => (props.lg ? "25px" : "19px")};
+  height: ${(props) => (props.lg ? "25px" : "19px")};
+  background-color: #2c2c2c;
+  border-radius: 50%;
   overflow: hidden;
 `;
 
-const Avatar = ({ url = "" }) => {
-  console.log("url", url);
+const Img = styled.img`
+  max-width: 100%;
+`;
+
+const Avatar = ({ url = "", lg = false }) => {
   return (
-    <StyledAvatar>
+    <StyledAvatar lg={lg}>
       {url ? <Img src={url} /> : <FontAwesomeIcon icon={faUser} size="lg" />}
     </StyledAvatar>
   );
