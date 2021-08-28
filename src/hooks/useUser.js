@@ -13,16 +13,17 @@ const ME_QUERY = gql`
 
 const useUser = () => {
   const hasAccessToken = useReactiveVar(isLoggedInVar);
-  const { data, error } = useQuery(ME_QUERY, {
+  const { data } = useQuery(ME_QUERY, {
     skip: !hasAccessToken,
   });
 
   useEffect(() => {
     if (data?.me === null) {
-      console.log(data);
       userSignOut();
     }
   }, [data]);
+
+  return { data };
 };
 
 export default useUser;
