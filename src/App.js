@@ -9,8 +9,7 @@ import Login from "./screens/SignIn";
 import NotFound from "./screens/NotFound";
 import SignUp from "./screens/SignUp";
 import { darkTheme, GlobalStyles, lightTheme } from "./styles";
-import Header from "./components/Header";
-import Layout from "./components/auth/Layout";
+import Layout from "./components/Layout";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
