@@ -71,7 +71,7 @@ const SignUp = () => {
   const [createAccount, { loading }] = useMutation(SIGNUP_MUTATION, {
     onCompleted,
   });
-  const { register, handleSubmit, errors, formState, getValues } = useForm({
+  const { register, handleSubmit, formState, getValues } = useForm({
     mode: "onChange",
   });
   const onSubmitValid = (data) => {
