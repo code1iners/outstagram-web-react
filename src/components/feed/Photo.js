@@ -106,30 +106,45 @@ const Photo = ({
     } = result;
 
     if (ok) {
-      const fragmentId = `Photo:${id}`;
-      const fragment = gql`
-        fragment asdf on Photo {
-          isLiked
-          likes
-        }
-      `;
+      const photoId = `Photo:${id}`;
 
-      const readFragment = cache.readFragment({
-        id: fragmentId,
-        fragment,
+      // v2 code
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(previous) {
+            return !previous;
+          },
+          likes(previous) {
+            return isLiked ? previous - 1 : previous + 1;
+          },
+        },
       });
 
-      if ("isLiked" in readFragment && "likes" in readFragment) {
-        const { isLiked: cachedIsLiked, likes: cachedLikes } = readFragment;
-        cache.writeFragment({
-          id: fragmentId,
-          fragment,
-          data: {
-            isLiked: !cachedIsLiked,
-            likes: cachedIsLiked ? cachedLikes - 1 : cachedLikes + 1,
-          },
-        });
-      }
+      // v1 code
+      // const fragment = gql`
+      //   fragment asdf on Photo {
+      //     isLiked
+      //     likes
+      //   }
+      // `;
+
+      // const readFragment = cache.readFragment({
+      //   id: fragmentId,
+      //   fragment,
+      // });
+
+      // if ("isLiked" in readFragment && "likes" in readFragment) {
+      //   const { isLiked: cachedIsLiked, likes: cachedLikes } = readFragment;
+      //   cache.writeFragment({
+      //     id: fragmentId,
+      //     fragment,
+      //     data: {
+      //       isLiked: !cachedIsLiked,
+      //       likes: cachedIsLiked ? cachedLikes - 1 : cachedLikes + 1,
+      //     },
+      //   });
+      // }
     }
   };
 
