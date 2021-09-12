@@ -11,6 +11,7 @@ import styled from "styled-components";
 import Avatar from "../Avatar.js";
 import { FatText } from "../shared.js";
 import { gql, useMutation } from "@apollo/client";
+import Comments from "./Comments.js";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -87,7 +88,16 @@ const LikesContainer = styled.div`
 const Likes = styled(FatText)``;
 // footer end
 
-const Photo = ({ id, user, file, isLiked, likes }) => {
+const Photo = ({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  commentCount,
+  comments,
+}) => {
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -166,6 +176,14 @@ const Photo = ({ id, user, file, isLiked, likes }) => {
         <LikesContainer>
           <Likes>{likes <= 1 ? `${likes} like` : `${likes} likes`}</Likes>
         </LikesContainer>
+
+        {/* comments */}
+        <Comments
+          comments={comments}
+          commentCount={commentCount}
+          author={user.username}
+          caption={caption}
+        />
       </PhotoFooter>
     </PhotoContainer>
   );
@@ -180,6 +198,8 @@ Photo.propTypes = {
   file: PropTypes.string.isRequired,
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
+  caption: PropTypes.string,
+  commentCount: PropTypes.number,
 };
 
 export default Photo;
