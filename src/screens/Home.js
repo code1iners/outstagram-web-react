@@ -36,7 +36,10 @@ const Home = () => {
 
   return (
     <div>
+      {/* Page title */}
       <PageTitle title="Home" />
+
+      {/* Feeds */}
       {data?.seeFeeds?.map((photo) => (
         <Photo key={photo.id} {...photo} />
       ))}
