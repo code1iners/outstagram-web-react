@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  margin-top: 5px;
+`;
 const CommentCaption = styled.span`
   margin-left: 10px;
 

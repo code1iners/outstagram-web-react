@@ -194,6 +194,7 @@ const Photo = ({
 
         {/* comments */}
         <Comments
+          photoId={id}
           comments={comments}
           commentCount={commentCount}
           author={user.username}
