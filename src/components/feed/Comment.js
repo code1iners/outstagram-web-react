@@ -6,7 +6,7 @@ import { Fragment } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 // mutations.
 const DELETE_COMMENT_MUTATION = gql`
@@ -37,11 +37,11 @@ const CommentCaption = styled.span`
 const CommentDeleteButton = styled.button`
   background-color: transparent;
   border: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 
   svg {
@@ -93,7 +93,9 @@ const Comment = ({ id, author, payload, isMine, photoId }) => {
 
   return (
     <CommentContainer>
-      <FatText>{author}</FatText>
+      <Link to={`/users/${author}`}>
+        <FatText>{author}</FatText>
+      </Link>
       <CommentCaption>
         {payload.split(" ").map((word, wordIndex) =>
           /#[\w]+/.test(word) ? (
@@ -108,7 +110,7 @@ const Comment = ({ id, author, payload, isMine, photoId }) => {
 
       {isMine ? (
         <CommentDeleteButton onClick={onDeleteClick}>
-          <FontAwesomeIcon icon={faMinusCircle} />
+          <FontAwesomeIcon icon={faTimes} />
         </CommentDeleteButton>
       ) : null}
     </CommentContainer>
