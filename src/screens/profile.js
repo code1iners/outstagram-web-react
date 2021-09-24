@@ -1,4 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
+import { faComment, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import Layout from "../components/Layout";
@@ -114,66 +116,104 @@ const PhotoContainer = styled.section`
 `;
 
 const Photo = styled.div`
+  position: relative;
   height: 250px;
   background: url(${(props) => props.bg});
   background-size: cover;
   cursor: pointer;
 `;
+const Icons = styled.div`
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  &:hover {
+    opacity: 1;
+  }
+`;
+const Icon = styled.span`
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  margin: 0px 5px;
+  svg {
+    font-size: 14px;
+    margin-right: 5px;
+  }
+`;
 // body end.
 
 const Profile = () => {
   const { username } = useParams();
-  const {
-    data: { seeProfile },
-  } = useQuery(SEE_PROFILE_QUERY, {
-    variables: { username },
+  const { data } = useQuery(SEE_PROFILE_QUERY, {
+    variables: {
+      username,
+    },
   });
-  console.log(seeProfile);
   return (
     <Layout>
       <ProfileContainer>
         {/* my information */}
         <ProfileHeader>
           <ProfileAvatarWrapper>
-            <ProfileAvatar src={seeProfile.avatar} />
+            <ProfileAvatar src={data?.seeProfile?.avatar} />
           </ProfileAvatarWrapper>
 
           <ProfileInfoWrapper>
             {/* username */}
             <Row>
-              <Username>{seeProfile.username}</Username>
+              <Username>{data?.seeProfile?.username}</Username>
             </Row>
 
             {/* follows */}
             <Row>
               <FollowWrapper>
-                <FollowValue>{seeProfile.totalFollowers}</FollowValue>{" "}
+                <FollowValue>{data?.seeProfile?.totalFollowers}</FollowValue>{" "}
                 <FollowSuffix>followers</FollowSuffix>
               </FollowWrapper>
 
               <FollowWrapper>
-                <FollowValue>{seeProfile.totalFollowing}</FollowValue>{" "}
+                <FollowValue>{data?.seeProfile?.totalFollowing}</FollowValue>{" "}
                 <FollowSuffix>following</FollowSuffix>
               </FollowWrapper>
             </Row>
 
             {/* names */}
             <Names>
-              <span>{seeProfile.firstName}</span>
-              <span>{seeProfile.lastName}</span>
+              <span>{data?.seeProfile?.firstName}</span>
+              <span>{data?.seeProfile?.lastName}</span>
             </Names>
 
             {/* bio */}
             <Row>
-              <Bio>{seeProfile.bio ? seeProfile.bio : "Hello Outstagram!"}</Bio>
+              <Bio>
+                {data?.seeProfile?.bio
+                  ? data?.seeProfile?.bio
+                  : "Hello Outstagram!"}
+              </Bio>
             </Row>
           </ProfileInfoWrapper>
         </ProfileHeader>
 
         {/* photos */}
         <PhotoContainer>
-          {seeProfile?.photos.map((photo) => (
-            <Photo bg={photo.file} />
+          {data?.seeProfile?.photos.map((photo) => (
+            <Photo bg={photo.file}>
+              <Icons>
+                <Icon>
+                  <FontAwesomeIcon icon={faHeart} />
+                  <span>{photo.likes}</span>
+                </Icon>
+                <Icon>
+                  <FontAwesomeIcon icon={faComment} />
+                  <span>{photo.commentCount}</span>
+                </Icon>
+              </Icons>
+            </Photo>
           ))}
         </PhotoContainer>
       </ProfileContainer>
