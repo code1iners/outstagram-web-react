@@ -1,10 +1,13 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { faComment, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import Layout from "../components/Layout";
+import PageTitle from "../components/PageTitle";
+import { SimpleButton } from "../components/shared";
 import { PHOTO_FRAGMENT, PROFILE_FRAGMENT } from "../fragments";
+import useUser from "../hooks/useUser";
 
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($username: String!) {
@@ -17,6 +20,22 @@ const SEE_PROFILE_QUERY = gql`
   }
   ${PROFILE_FRAGMENT}
   ${PHOTO_FRAGMENT}
+`;
+
+const FOLLOW_USER_MUTATION = gql`
+  mutation followUser($username: String!) {
+    followUser(username: $username) {
+      ok
+    }
+  }
+`;
+
+const UNFOLLOW_USER_MUTATION = gql`
+  mutation unfollowUser($username: String!) {
+    unfollowUser(username: $username) {
+      ok
+    }
+  }
 `;
 
 const ProfileContainer = styled.main`
@@ -57,6 +76,7 @@ const ProfileInfoWrapper = styled.div`
   justify-content: center;
 `;
 const Row = styled.div`
+  padding: 5px 0px;
   margin-top: 15px;
   display: flex;
   align-items: center;
@@ -67,6 +87,9 @@ const Username = styled.span`
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 1.5px;
+`;
+const ProfileButton = styled(SimpleButton)`
+  margin-left: 10px;
 `;
 // username end.
 
@@ -149,13 +172,47 @@ const Icon = styled.span`
 
 const Profile = () => {
   const { username } = useParams();
-  const { data } = useQuery(SEE_PROFILE_QUERY, {
-    variables: {
-      username,
-    },
+  const { data: meData } = useUser();
+  const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
+    variables: { username },
   });
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: { username },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      {
+        query: SEE_PROFILE_QUERY,
+        variables: { username: meData?.me?.username },
+      },
+    ],
+  });
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: { username },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      {
+        query: SEE_PROFILE_QUERY,
+        variables: { username: meData?.me?.username },
+      },
+    ],
+  });
+
+  const getButton = (seeProfile) => {
+    const { isMe, isFollowing } = seeProfile;
+
+    if (isMe) return <ProfileButton>Edit Profile</ProfileButton>;
+    if (isFollowing)
+      return <ProfileButton onClick={unfollowUser}>Unfollow</ProfileButton>;
+    else return <ProfileButton onClick={followUser}>Follow</ProfileButton>;
+  };
+
   return (
     <Layout>
+      <PageTitle
+        title={
+          loading ? "Loading..." : `${data?.seeProfile.username}'s Profile`
+        }
+      />
       <ProfileContainer>
         {/* my information */}
         <ProfileHeader>
@@ -167,6 +224,7 @@ const Profile = () => {
             {/* username */}
             <Row>
               <Username>{data?.seeProfile?.username}</Username>
+              {data?.seeProfile ? getButton(data.seeProfile) : null}
             </Row>
 
             {/* follows */}
@@ -202,7 +260,7 @@ const Profile = () => {
         {/* photos */}
         <PhotoContainer>
           {data?.seeProfile?.photos.map((photo) => (
-            <Photo bg={photo.file}>
+            <Photo bg={photo.file} key={photo.id}>
               <Icons>
                 <Icon>
                   <FontAwesomeIcon icon={faHeart} />

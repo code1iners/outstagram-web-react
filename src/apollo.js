@@ -40,7 +40,7 @@ export const disableDarkMode = () => {
  * Add Authorization (token) information in Request headers.
  */
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: "http://121.130.224.131:4000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

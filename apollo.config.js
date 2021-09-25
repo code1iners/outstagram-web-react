@@ -4,7 +4,7 @@ module.exports = {
     tagName: "gql",
     service: {
       name: "outstagram-backend",
-      url: "http://localhost:4000/graphql",
+      url: "http://121.130.224.131:4000/graphql",
     },
   },
 };
