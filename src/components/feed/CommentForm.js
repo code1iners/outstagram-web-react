@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import useUser from "../../hooks/useUser";
+import { useUser } from "../../hooks/useUser";
 
 // mutations
 const CREATE_COMMENT_MUTATION = gql`

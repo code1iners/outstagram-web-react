@@ -7,7 +7,7 @@ import Layout from "../components/Layout";
 import PageTitle from "../components/PageTitle";
 import { SimpleButton } from "../components/shared";
 import { PHOTO_FRAGMENT, PROFILE_FRAGMENT } from "../fragments";
-import useUser from "../hooks/useUser";
+import { ME_QUERY, useUser } from "../hooks/useUser";
 
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($username: String!) {
@@ -180,20 +180,14 @@ const Profile = () => {
     variables: { username },
     refetchQueries: [
       { query: SEE_PROFILE_QUERY, variables: { username } },
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: { username: meData?.me?.username },
-      },
+      { query: ME_QUERY },
     ],
   });
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: { username },
     refetchQueries: [
       { query: SEE_PROFILE_QUERY, variables: { username } },
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: { username: meData?.me?.username },
-      },
+      { query: ME_QUERY },
     ],
   });
 
