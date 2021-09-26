@@ -183,6 +183,7 @@ const Profile = () => {
     } = data;
     if (!ok) return;
     const { cache } = client;
+    // update profile cache.
     cache.modify({
       id: `User:${username}`,
       fields: {
@@ -190,6 +191,17 @@ const Profile = () => {
           return true;
         },
         totalFollowers(previous) {
+          return previous + 1;
+        },
+      },
+    });
+
+    // update me cache.
+    const { me } = meData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(previous) {
           return previous + 1;
         },
       },
@@ -206,6 +218,7 @@ const Profile = () => {
       },
     } = result;
     if (!ok) return;
+    // update profile cache.
     cache.modify({
       id: `User:${username}`,
       fields: {
@@ -213,6 +226,17 @@ const Profile = () => {
           return false;
         },
         totalFollowers(previous) {
+          return previous - 1;
+        },
+      },
+    });
+
+    // update me cache.
+    const { me } = meData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(previous) {
           return previous - 1;
         },
       },

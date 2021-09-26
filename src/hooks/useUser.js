@@ -7,8 +7,6 @@ export const ME_QUERY = gql`
     me {
       username
       avatar
-      totalFollowing
-      totalFollowers
     }
   }
 `;
